@@ -1,0 +1,9 @@
+{% from 'macros/component/action-link.html' import actionLink %}
+{% extends 'portfolio-page.html' %}
+{% set pageTitle = 'James Lind Alliance (JLA)' %}
+{% block portfolioPageContent %}
+{{ actionLink({
+    'href': 'https://www.jla.nihr.ac.uk/',
+    'text': 'Visit the JLA'
+}) }}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% from 'macros/component/page.html' import page %}
+
+{% set pageContent %}
+  {% block pageContent %}
+  {% endblock %}
+{% endset %}
+
+{{ page({
+    'pageTitle': pageTitle,
+    'siteTitle': 'Web Services Group',
+    'stylesheets': [
+        '/wsg.bundle.css'
+    ],
+    'scripts': [
+        '/wsg.bundle.js'
+    ],
+    'primaryNavigationLinks': [
+        {
+            'label': 'Services',
+            'href': '/service'
+        },
+        {
+            'label': 'Portfolio',
+            'href': '/portfolio'
+        },
+        {
+            'label': 'About us',
+            'href': '/about-us'
+        }
+    ],
+    'pageContent': pageContent | safe,
+    'header': {
+        'serviceTitle': 'Web Services Group'
+    },
+    'footer': {
+        'socialMediaLinks': [
+            {
+                'label': 'Github',
+                'href': 'https://github.com/nihruk/',
+                'classes': [
+                    'fa-brands',
+                    'fa-github'
+                ]
+            }
+        ]
+    }
+}) }}

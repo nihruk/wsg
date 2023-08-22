@@ -1,0 +1,9 @@
+{% from 'macros/component/action-link.html' import actionLink %}
+{% extends 'portfolio-page.html' %}
+{% set pageTitle = 'Ensuring Value in Research (EViR)' %}
+{% block portfolioPageContent %}
+{{ actionLink({
+    'href': 'https://evir.org/',
+    'text': 'Visit EViR'
+}) }}
+{% endblock %}

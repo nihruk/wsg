@@ -1,0 +1,14 @@
+{% from 'macros/component/action-link.html' import actionLink %}
+{% extends 'portfolio-page.html' %}
+{% set pageTitle = 'Design System' %}
+{% block portfolioPageContent %}
+<p>
+    The Design System is a platform that consists of general style and branding guidelines, as well as off-the-shelf
+    interactive components to quickly build anything ranging from a single HTML page to entire web applications. Built
+    with <i>HTML</i>, <i>CSS</i>, and <i>Node.js</i>.
+</p>
+{{ actionLink({
+    'href': 'https://design-system.nihr.ac.uk',
+    'text': 'Learn more about the Design System'
+}) }}
+{% endblock %}

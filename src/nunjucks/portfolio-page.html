@@ -1,0 +1,12 @@
+{% extends 'page.html' %}
+{% block pageContent %}
+<div class="container">
+    <div class="row">
+        <h1>{{ pageTitle }}</h1>
+        <div class="col-8">
+            {% block portfolioPageContent %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

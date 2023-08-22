@@ -1,0 +1,16 @@
+{% from 'macros/component/callout-text.html' import calloutText %}
+{% extends 'portfolio-page.html' %}
+{% set pageTitle = 'Console' %}
+{% block portfolioPageContent %}
+<p>
+    Fetch open data about NIHR funding, awards, publications, and more from the Console.
+</p>
+
+{{ calloutText({
+    'paragraphs': [
+        {
+        'body': 'The Console will be available to the general public soon.'
+        }
+    ]
+}) }}
+{% endblock %}

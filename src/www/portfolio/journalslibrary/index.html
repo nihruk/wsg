@@ -1,0 +1,9 @@
+{% from 'macros/component/action-link.html' import actionLink %}
+{% extends 'portfolio-page.html' %}
+{% set pageTitle = 'Journals Library' %}
+{% block portfolioPageContent %}
+{{ actionLink({
+    'href': 'https://journalslibrary.nihr.ac.uk',
+    'text': 'Visit the Journals Library'
+}) }}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% from 'macros/component/card.html' import card %}
+{% from 'macros/component/hero.html' import hero %}
+{% extends 'page.html' %}
+{% block pageContent %}
+{% set heroBody %}
+<div class="row justify-content-center">
+    <div class="col-8 text-center">
+        <h1 class="text-white">Web Services Group</h1>
+        <p class="lead text-white">
+            We design and build web applications for the <a href="https://nihr.ac.uk" class="text-white">NIHR</a>, based out of NIHRCC, hosted by the University of Southampton.
+        </p>
+    </div>
+</div>
+{% endset %}
+{{ hero({
+    'body': heroBody | safe
+}) }}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-lg-6">
+            {% set cardBody %}
+            <p class="mb-0">
+                Design and build NIHR web applications using our <a href="/portfolio/design-system">Design System</a>.
+            </p>
+            {% endset %}
+            {{ card({
+                'heading': 'For designers and developers',
+                'body': cardBody | safe
+            }) }}
+        </div>
+        <div class="col-lg-6">
+            {% set cardBody %}
+            <p class="mb-0">
+                Fetch open data about NIHR funding, awards, publications, and more from the <a href="/portfolio/console">Console</a> (coming soon).
+            </p>
+            {% endset %}
+            {{ card({
+                'heading': 'For data analysts and developers',
+                'body': cardBody | safe
+            }) }}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
