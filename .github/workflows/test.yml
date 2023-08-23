@@ -1,0 +1,59 @@
+name: Test
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: 'Ubuntu'
+            os: ubuntu-latest
+            nodejs: '20'
+          - name: 'Windows'
+            os: windows-latest
+            nodejs: '20'
+
+    steps:
+      - name: Check out the source code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs }}
+
+      - name: Get the npm cache directory
+        run: echo "npm_cache_dir=$(npm config get cache)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.npm_cache_dir }}
+          key: npm-${{ hashFiles('./package.json') }}
+          restore-keys: |
+            npm-
+
+      - name: Install npm dependencies
+        run: |
+          npm install
+        shell: bash
+
+      - name: Run the tests
+        run: |
+          npm run test
+        shell: bash
