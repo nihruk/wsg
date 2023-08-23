@@ -1,0 +1,20 @@
+<ul class="nav nav-pills flex-column">
+    {% for linkPath, linkLabel in links %}
+    {% set classes = ['nav-link', 'rounded-0'] %}
+    {% if (rootPath ~ linkPath) is activeCurrentUrl %}
+        {% set classes = classes.concat(['active']) %}
+        {% set ariaCurrent = 'page' %}
+    {% else %}
+        {% set ariaCurrent = null %}
+    {% endif %}
+    {% set linkAttributes = {
+        'class': classes,
+        'aria-current': ariaCurrent
+    } %}
+        <li>
+            <a href="{{ rootPath }}{{ linkPath }}" {{ linkAttributes | htmlAttributes }}>
+                {{ linkLabel }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
