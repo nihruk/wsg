@@ -1,0 +1,147 @@
+{% extends 'docs-page.html' %}
+{% set pageTitle = 'Squash and rebase' %}
+{% block docsPageContent %}
+<h2 class="heading-underline">Introduction</h2>
+<dl>
+    <dt>Squash</dt>
+    <dd>combining multiple sequential commits into a single new commit</dd>
+    <dt>Rebase</dt>
+    <dd>to reapply changes from branch A onto another branch B.</dd>
+</dl>
+<h2 class="heading-underline">Why squash</h2>
+<p>
+    Git is a tool to keep track of the historical changes to a codebase. We want each change to be atomic
+    (self-contained). This makes it easy to find changes, as well as roll them back. The idea is that before and after
+    each commit, the repository is in a stable state.
+</p>
+<p>
+    When developing, we do not directly produce these atomic changes. Instead, we tend to commit any number of changes,
+    some of which undo earlier changes. This is a normal way of working.
+</p>
+<p>
+    Squashing lets us clean up this development/working history, consisting of multiple separate commits, the sum of
+    which represents an atomic change, into a single commit. This single commit is then ready to be merged into
+    <code>main</code>.
+</p>
+<p>
+    This approach gets us the best of both worlds: we can develop changes the way we want to, save when we need to, yet
+    the end result is clean and self-documenting.
+</p>
+<h2 class="heading-underline">How to squash</h2>
+<p>
+    When performing a squash, the simplest and most common situation is when you are on your own branch, with
+    <code>n</code> commits (<code>n</code> being a number greater than or equal to 2), of which the most recent commit
+    is the branch’s <code>HEAD</code>. <code>n</code> represents the number of commits to squash into one.
+</p>
+<p>
+    Run <code>git rebase -i HEAD~n</code>. For a squash of the 3 most recent commits (<code>n</code> is 3), this would
+    be <code>git rebase -i HEAD~3</code>.
+</p>
+<p>
+    Git will open your default editor for the first time. You will see all 3 commits listed, prefixed with
+    <code>pick</code>:
+</p>
+<pre class="code p-1"><code>pick a1b2c3 B
+pick d4e5f6 C
+pick g7h8i9 D
+</code></pre>
+<p>
+    In this example, commit D (<code>g7h8i9</code>) is the most recent commit (<code>HEAD</code>).
+</p>
+<p>
+    Because a squash squashes the newest <code>n</code>-1 commits into the <code>n</code>th commit, change
+    <code>pick</code> to <code>squash</code> for the <strong>newest</strong> 2 commits. In your editor, these are the
+    <strong>last</strong> 2 commits, as they are listed oldest first:
+</p>
+<pre class="code p-1"><code>pick a1b2c3 B
+squash d4e5f6 C
+squash g7h8i9 D
+</code></pre>
+<p>
+    Save and exit your editor.
+</p>
+<p>
+    Git will then open your default editor for the second time. This is where you edit the message for the new, single,
+    squashed commit. Note that Git prepopulated this with the 3 messages from the original commits. Edit and comment out
+    as appropriate, save, and exit your editor.
+</p>
+<p>
+    The squash is now done. Run <code>git log</code> for confirmation.
+</p>
+<h2 class="heading-underline">Why rebase</h2>
+<p>
+    Most of the time we rebase PR branches in order to pull in the changes from <code>main</code>. Given the following
+    commit history on <code>main</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; C</code></pre>
+<p>
+    and the following commit history on <code>pr</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; D</code></pre>
+<p>
+    we want to update <code>pr</code> to look like:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; C -&gt; D</code></pre>
+<p>
+    This way, <code>pr</code> looks exactly like <code>main</code> would look like after the PR has been merged. This
+    allows us to review (manually and through automated tests) the changes in their future final state, without risk of
+    our changes being in the wrong order, like with a plain merge.
+</p>
+<h2 class="heading-underline">How to rebase</h2>
+<p>
+    Given the branches from <i>Why rebase</i>, run the following:
+</p>
+<pre class="code p-1"><code>git checkout pr
+git rebase main
+</code></pre>
+<p>
+    Git may report that there are merge conflicts. Resolve these, and run:
+</p>
+<pre class="code p-1"><code>git add -A .
+git rebase --continue
+</code></pre>
+<p>
+    Git may report merge conflicts iteratively, for as many times as there are commits on <code>pr</code> that do not
+    exist on <code>main</code> (up to <code>n</code> times).
+</p>
+<p>
+    The rebase is now done. Run <code>git log</code> for confirmation.
+</p>
+<p>
+    You may exit an ongoing rebase at any time using <code>git rebase --abort</code>.
+</p>
+<h2 class="heading-underline">Why squash before rebase</h2>
+<p>
+    As we saw in <i>How to rebase</i>, the number of conflicts grows with the number of commits on the target branch
+    (<code>pr</code>) that do not exist on the base branch (<code>main</code>). Squashing the commits on a target branch
+    before rebasing means that there will be at most a single iteration of conflicts for you to resolve, rather than
+    potentially <code>n</code>.
+</p>
+<p>
+    Given the following commit history on <code>main</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; C</code></pre>
+<p>
+    and the following commit history on <code>pr</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; D -&gt; E</code></pre>
+<p>
+    If commits <code>C</code>, <code>D</code>, and <code>E</code> all make changes to the same few lines of code,
+    <code>C</code> will conflict with both <code>D</code> and <code>E</code>, resulting in two iterations of conflicts
+    for you to resolve during a rebase.
+</p>
+<p>
+    Considering there are no conflicts when squashing, performing a squash before a rebase gives the following commit
+    history on <code>main</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; C</code></pre>
+<p>
+    and the following commit history on <code>pr</code>:
+</p>
+<pre class="code p-1"><code>A -&gt; B -&gt; F</code></pre>
+<p>
+    where <code>F</code> is the single commit resulting from the squash of <code>D</code> and <code>E</code>, which
+    means that <code>C</code> only conflicts with <code>F</code> and the following rebase will only require you to
+    resolve that single conflict.
+</p>
+{% endblock %}
